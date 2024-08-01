@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pulze.ai Settings</title>
+  <style>
+    body {
+      width: 300px;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9fa;
+    }
+    .container {
+      background-color: white;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 18px;
+      color: #333;
+    }
+    .input-group {
+      margin-bottom: 16px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px;
+      background-color: #6200ea;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #5000d3;
+    }
+    .space-list {
+      margin-top: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .space-item {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+    .space-item > * {
+      margin-right: 10px;
+    }
+    .logo-selection {
+      position: relative;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px;
+      width: auto;
+    }
+    .logo-selection.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .logo-selection img {
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+    }
+    .dropdown-arrow {
+      margin-left: 5px;
+    }
+    .dropdown-menu {
+      position: absolute;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      z-index: 1000;
+      width: 120px;
+      top: 100%;
+      left: 0;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.3s ease-out, opacity 0.3s, visibility 0.3s;
+      opacity: 0;
+      visibility: hidden;
+    }
+    .dropdown-menu.open {
+      max-height: 300px;
+      opacity: 1;
+      visibility: visible;
+    }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      padding: 5px;
+      cursor: pointer;
+    }
+    .dropdown-item:hover {
+      background-color: #f0f0f0;
+    }
+    .dropdown-item img {
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+    }
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 var(--pulse-color, rgba(255, 0, 0, 0.7));
+      }
+      70% {
+        box-shadow: 0 0 0 3px var(--pulse-color, rgba(255, 0, 0, 0));
+      }
+      100% {
+        box-shadow: 0 0 0 0 var(--pulse-color, rgba(255, 0, 0, 0));
+      }
+    }
+    .status-radio {
+      display: flex;
+      align-items: center;
+      margin-left: auto;
+    }
+    .status-radio input[type="radio"] {
+      margin-right: 5px;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      outline: none;
+      border: 2px solid red;
+      position: relative;
+      cursor: pointer;
+      animation: pulse 4s infinite;
+      --pulse-color: rgba(255, 0, 0, 0.7);
+    }
+    .status-radio input[type="radio"]::before {
+      content: '';
+      display: block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: red;
+    }
+    .status-radio.connected input[type="radio"] {
+      border-color: green;
+      --pulse-color: rgba(0, 255, 0, 0.7);
+    }
+    .status-radio.connected input[type="radio"]::before {
+      background-color: green;
+    }
+    .status-radio label {
+      font-size: 12px;
+      color: grey;
+      cursor: pointer;
+    }
+    .logo-selection .logo-text {
+      display: inline;
+    }
+    .logo-selection .logo-img {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Pulze.ai Spaces</h2>
+    <div class="input-group" id="login-section">
+      <button id="loginButton">Login with Pulze.ai</button>
+    </div>
+    <div id="spaces-section" style="display: none;">
+      <input type="text" id="searchInput" placeholder="Search spaces">
+      <div class="space-list" id="space-list"></div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
