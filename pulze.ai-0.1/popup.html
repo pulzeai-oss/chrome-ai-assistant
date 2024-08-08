@@ -24,7 +24,7 @@
       margin-bottom: 16px;
     }
     input[type="text"] {
-      width: 100%;
+      width: calc(100% - 16px);
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -179,9 +179,10 @@
 </head>
 <body>
   <div class="container">
-    <h2>Pulze.ai Spaces</h2>
+    <center><img src="https://cdn.prod.website-files.com/667253a488705bf38f32d9bc/667263875a7b3b123be0f099_pulze-logo.svg" loading="lazy" alt="Pulze.ai Logo" class="logo"></center>
+    <center><p style="font-size: 9pt; font-family: Cabin, sans-serif; color: rgb(153,153,153); background-color: transparent; vertical-align: baseline; white-space: pre-wrap;"><a href="https://spaces.pulze.ai" style="color: #0b5394;">Spaces</a> powered by Pulze.ai</p></center>
     <div class="input-group" id="login-section">
-      <button id="loginButton">Login with Pulze.ai</button>
+      <center><button id="loginButton">Login with Pulze.ai</button></center>
     </div>
     <div id="spaces-section" style="display: none;">
       <input type="text" id="searchInput" placeholder="Search spaces">
