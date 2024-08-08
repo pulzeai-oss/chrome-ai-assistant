@@ -27,8 +27,12 @@ document.addEventListener('DOMContentLoaded', function() {
         interactive: true
       }, function(redirectUrl) {
         if (chrome.runtime.lastError) {
+          console.error('Chrome runtime error:', chrome.runtime.lastError);
           reject(new Error(chrome.runtime.lastError.message));
+        } else if (!redirectUrl) {
+          reject(new Error('No redirect URL received. Authentication failed.'));
         } else {
+          console.log('Redirect URL:', redirectUrl);
           const url = new URL(redirectUrl);
           const params = new URLSearchParams(url.hash.substring(1));
           const accessToken = params.get('access_token');
@@ -39,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
           } else {
             const expiresAt = Date.now() + parseInt(expiresIn) * 1000;
             chrome.storage.local.set({ 'access_token': accessToken, 'expires_at': expiresAt }, () => {
+              console.log('Access token saved:', accessToken);
               resolve(accessToken);
             });
           }
@@ -51,7 +56,9 @@ document.addEventListener('DOMContentLoaded', function() {
     return new Promise((resolve) => {
       chrome.storage.local.get(['expires_at'], (result) => {
         const expiresAt = result.expires_at || 0;
-        resolve(new Date().getTime() < expiresAt);
+        const isAuth = new Date().getTime() < expiresAt;
+        console.log('Is authenticated:', isAuth);
+        resolve(isAuth);
       });
     });
   }
@@ -137,14 +144,27 @@ document.addEventListener('DOMContentLoaded', function() {
           <span class="dropdown-arrow">&#9662;</span>
           <div class="dropdown-menu" id="dropdown-menu-${index}">
             <div class="dropdown-item" data-value="gmail">
-              <img src="https://www.google.com/favicon.ico" alt="Google Logo"> Gmail
+              <img src="https://www.google.com/favicon.ico" alt="Google Logo"> <span>Gmail</span>
             </div>
             <div class="dropdown-item" data-value="smartlead">
-              <img src="https://cdn.prod.website-files.com/6204a703ff61516512c04f55/631b012f135f706978f4f8e5_Group_6608_256x256.png" alt="Smartlead Logo"> Smartlead
+              <img src="https://cdn.prod.website-files.com/6204a703ff61516512c04f55/631b012f135f706978f4f8e5_Group_6608_256x256.png" alt="Smartlead Logo"> <span>Smartlead</span>
             </div>
             <div class="dropdown-item" data-value="whatsapp">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Logo"> WhatsApp
+              <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Logo"> <span>WhatsApp</span>
             </div>
+            <div class="dropdown-item" data-value="text-insights">
+              &nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+              </svg>
+              <span>&nbsp;&nbsp;Text Insights</span>
+            </div>
+            ${space.provider !== 'none' ? `
+              <div class="dropdown-item" data-value="none">
+                &nbsp;&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+                <span>&nbsp;Unassign</span>
+              </div>` : ''}
           </div>
         </div>
         <strong>${space.name}</strong>
@@ -238,6 +258,21 @@ document.addEventListener('DOMContentLoaded', function() {
         logoSrc = 'https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg';
         logoAlt = 'WhatsApp Logo';
         break;
+      case 'text-insights':
+        logoImg.style.display = 'none';
+        logoText.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+          </svg>
+        `;
+        logoText.style.display = 'flex';
+        logoText.style.alignItems = 'center';
+        return;
+      case 'none':
+        logoImg.style.display = 'none';
+        logoText.textContent = 'Assign';
+        logoText.style.display = 'inline';
+        return;
     }
 
     logoImg.src = logoSrc;
@@ -358,6 +393,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const accessToken = result.access_token;
         fetchSpaces(accessToken);
       });
+    } else {
+      loginSection.style.display = 'block';
+      spacesSection.style.display = 'none';
     }
   });
 });

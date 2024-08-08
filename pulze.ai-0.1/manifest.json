@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Pulze.ai - Make life easier with AI",
-  "version": "0.1",
+  "version": "0.2",
   "description": "Pulze.ai enables users to connect daily tools with personalized Spaces, and more for free.",
   "permissions": [
     "identity",
@@ -16,18 +16,14 @@
   ],
   "content_scripts": [
     {
-      "matches": [
-        "https://mail.google.com/*",
-        "https://app.smartlead.ai/*",
-        "https://web.whatsapp.com/*"
-      ],
+      "matches": ["<all_urls>"],
       "js": ["content-script.js"],
       "type": "module"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["gmail.js", "smartlead.js", "whatsapp.js"],
+      "resources": ["gmail.js", "smartlead.js", "whatsapp.js", "text-insights.js"],
       "matches": ["<all_urls>"]
     }
   ],
