@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Pulze.ai - Make life easier with AI",
-  "version": "0.2",
+  "version": "0.3.1",
   "description": "Pulze.ai enables users to connect daily tools with personalized Spaces, and more for free.",
   "permissions": [
     "identity",
