@@ -147,6 +147,7 @@ export default function initializeWhatsAppFeatures() {
 
     async function fetchOpenAIResponse(prompt, userInput = null) {
       const apiKey = await getApiKey('whatsapp');
+      const custom_labels = { "chrome-extension": "true" };
 
       let messages = [
         { role: "user", content: `${prompt}` }
@@ -160,7 +161,8 @@ export default function initializeWhatsAppFeatures() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
+          'Authorization': `Bearer ${apiKey}`,
+          'Pulze-Labels': JSON.stringify(custom_labels)
         },
         body: JSON.stringify({
           model: "pulze",

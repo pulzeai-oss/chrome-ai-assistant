@@ -106,13 +106,16 @@ export default function initializeTextInsights() {
   async function generateAIResponse(selectedText) {
     try {
       const apiKey = await getApiKey('text-insights');
+      const custom_labels = { "chrome-extension": "true" };
+
       openAIConfig.apiKey = apiKey;
 
       const response = await fetch(`${openAIConfig.baseURL}/chat/completions/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
+          'Authorization': `Bearer ${apiKey}`,
+          'Pulze-Labels': JSON.stringify(custom_labels)
         },
         body: JSON.stringify({
           model: "pulze",
